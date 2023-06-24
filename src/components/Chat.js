@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 
 export const Chat = (props) => {
-    const {rooms} = props
+    const {room} = props
     const [newMessage, setNewMessage] = useState("")
     const messageRef = collection(db, "messages")
     const [messages,setMessages] = useState([])
@@ -28,12 +28,12 @@ export const Chat = (props) => {
             text: newMessage,
             createdAt: serverTimestamp(),
             user: auth.currentUser.displayName,
-            rooms,
+            room,
         })
     }
     return <div className="chat-app">
         <div className="header">
-            <h1>Welcome to: {rooms.toUpperCase()}</h1>
+            <h1>Welcome to: {room.toUpperCase()}</h1>
         </div>
 
         <div className="messages">
