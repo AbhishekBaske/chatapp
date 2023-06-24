@@ -1,15 +1,14 @@
-import {addDoc, collection, serverTimestamp, onSnapshot, query} from "firebase/firestore"
+import {addDoc, collection, serverTimestamp, onSnapshot, query,where, orderBy} from "firebase/firestore"
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 
-export const Chat = (props) => {
-    const {room} = props
+export const Chat = ({room}) => {
     const [newMessage, setNewMessage] = useState("")
     const messageRef = collection(db, "messages")
     const [messages,setMessages] = useState([])
 
     useEffect(() => {
-        const queryMessages = query(messageRef,where("room", "==", rooms), orderBy("createdAt"))
+        const queryMessages = query(messageRef,where("room", "==", room), orderBy("createdAt"))
         const unsubscibe = onSnapshot(queryMessages, (snapShot) => {
             let messages = []
             snapShot.forEach((doc) => {
@@ -30,6 +29,7 @@ export const Chat = (props) => {
             user: auth.currentUser.displayName,
             room,
         })
+            setNewMessage("")
     }
     return <div className="chat-app">
         <div className="header">
@@ -39,7 +39,7 @@ export const Chat = (props) => {
         <div className="messages">
             {messages.map((message) => {
                 <div className="message" key={messages.id}>
-                    <span className="user">{messages.user}</span>
+                    <span className="user">{messages.user}:</span>
                     {message.text}
                 </div>
             })}
